@@ -11,19 +11,6 @@ import kotlinx.coroutines.flow.map
 
 class CounterDataStoreManager(private val context: Context) {
 
-    suspend fun setCounter(counterValue: Int) {
-        context.counterDataStore.edit { preferences ->
-            preferences[COUNTER_KEY] = counterValue
-        }
-    }
-
-    // A getter for the counter value flow
-    fun getCounter(): Flow<Int> {
-        return context.counterDataStore.data.map { preferences ->
-            preferences[COUNTER_KEY] ?: 0
-        }
-    }
-
     suspend fun incrementCounter() {
         context.counterDataStore.edit { preferences ->
             val currentCounterValue = preferences[COUNTER_KEY]?:0
@@ -35,6 +22,19 @@ class CounterDataStoreManager(private val context: Context) {
         context.counterDataStore.edit { preferences ->
             val currentCounterValue = preferences[COUNTER_KEY]?:0
             preferences[COUNTER_KEY] = currentCounterValue-1
+        }
+    }
+
+    suspend fun setCounter(counterValue: Int) {
+        context.counterDataStore.edit { preferences ->
+            preferences[COUNTER_KEY] = counterValue
+        }
+    }
+
+    // A getter for the counter value flow
+    fun getCounter(): Flow<Int> {
+        return context.counterDataStore.data.map { preferences ->
+            preferences[COUNTER_KEY] ?: 0
         }
     }
 
